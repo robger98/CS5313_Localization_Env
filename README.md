@@ -63,13 +63,13 @@ transitions_table The transistion table for the cells, changing will BREAK the p
 robot_location    The location of the robot, changing will BREAK the program
 ```
 
-You shouldn't need to change any variables after initializing the enviroment, and doing so will either do nothing or break the program, so don't. 
+You shouldn't need to change any variables after initializing the enviroment, and doing so will either do nothing or break the program, so don't.
 
 More detailed descriptions of the variables, such as their type and format can be seen in the comments.
 
 ## Other Notes
 
-The coordinate system used in this environment is (Row, Column), not (x, y). 
+The coordinate system used in this environment is (Row, Column), not (x, y).
 
 All the generated mazes are completely enclosed by walls. This is to prevent action noise from causing the robot to go out of bounds. I'm mainly mentioning this so if you edit the the maze generation code you make sure to leave the bounding walls.
 
