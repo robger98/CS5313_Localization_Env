@@ -4,7 +4,6 @@
 
 import random
 from CS5313_Localization_Env import maze
-from pandas import *
 from enum import Enum
 
 class Directions(Enum):
@@ -84,7 +83,6 @@ class Environment:
                 self.robot_location = (self.robot_location[0]+direction.value[0], self.robot_location[1]+direction.value[1])
                 self.map[self.robot_location[0]][self.robot_location[1]] = 'x'
                 break
-        print(DataFrame(self.map))
         # return the new observation
         return self.observe()
 
@@ -193,5 +191,5 @@ class Environment:
         return False
 
 if __name__ == "__main__":
-    Environment(.1,0,.1,(10,10), seed=10)       
+    Environment(.1,.1,.1,(10,10), seed=10)       
 
