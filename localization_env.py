@@ -3,7 +3,7 @@
 # Date      : Feb 16, 2020
 
 import random
-import maze
+from CS5313_Localization_Env import maze
 from pandas import *
 from enum import Enum
 
@@ -144,9 +144,10 @@ class Environment:
                         action_probs[key] = 1/total_count - self.action_bias/nw_count
                     else:
                         action_probs[key] = 0
-                    
+               
                 # normalize action probabilities
                 action_sum = sum([action_probs[x] for x in Directions])
+                
                 for d in Directions:
                     action_probs[d] /= action_sum
 
@@ -185,8 +186,8 @@ class Environment:
         Return:\n
         A boolean signifying whether the cell to the given direction is traversable or not
         """
-        # see if the cell in the direction is traversable. Wrapped in try catch to handle out of bounds errors
-        if row+direction.value[0] > 0 and row+direction.value[0] < self.dimensions[0] and col+direction.value[0] > 0 and col+direction.value[0] < self.dimensions[1]:
+        # see if the cell in the direction is traversable. If statement to handle out of bounds errors
+        if row+direction.value[0] >= 0 and row+direction.value[0] < self.dimensions[0] and col+direction.value[0] >= 0 and col+direction.value[0] < self.dimensions[1]:
             if self.map[row+direction.value[0]][col+direction.value[1]] == 0:
                 return True
         return False
