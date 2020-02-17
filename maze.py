@@ -5,7 +5,6 @@
 # Code taken from http://code.activestate.com/recipes/578356-random-maze-generator/ used and modified under MIT license
 
 import random
-from pandas import DataFrame
 
 
 def make_maze(row, col, seed):
