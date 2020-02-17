@@ -22,17 +22,17 @@ observation = env.move()
 ```
 where `move()` returns the next observation.
 
-Observation can also be retrieved with:
+Observations can also be retrieved with:
 ```
 observation = env.observe()
 ```
 
-You can access every variable about the environment with the form:
+You can access every variable within the environment with the form:
 ```
 env.<variable_name>
 ```
 ## Directions Enum
-The directions in this program are represented with an Enum Class called `Directions`. The transition table uses these to represent movements in each of the cardinal directions as well as a stationary move, which happens when action noise causes the robot to run into a wall. This class can be access with `Le.Directions` for interpreting the transition tables.
+The directions in this program are represented with an Enum Class called `Directions`. The transition table uses these to represent movements in each of the cardinal directions as well as a stationary move, which happens when action noise causes the robot to run into a wall. This class can be accessed with `Le.Directions` for interpreting the transition tables.
 
 More can be learned by reading the comments in `localization_env.py`.
 
@@ -57,7 +57,7 @@ More detailed descriptions of the variables, such as their type and format can b
 ## Other Notes
 The coordinate system used in this environment is (Row, Column), not (x, y). 
 
-All the generated mazes are completely enclosed by walls. This is to prevent action noise from causing the robot to go out of bounds. I'm mainly mentioning this so if you edit the the maze generation code you make sure to leave the bounding wall.
+All the generated mazes are completely enclosed by walls. This is to prevent action noise from causing the robot to go out of bounds. I'm mainly mentioning this so if you edit the the maze generation code you make sure to leave the bounding walls.
 
 ## Support
 If you find a bug please email me at rrg053@utulsa.edu or robertrgeraghty@gmail.com, as I don't generally check the class discussion board on harvey.
