@@ -45,7 +45,7 @@ action_noise      The supplied action noise, changing won't do anything
 dimensions        The map dimensions, changing will BREAK the program
 seed              The random seed, changing won't do anything
 map               The map, changing will BREAK the program
-free_cells         A list of traversable cells, changing won't do anything
+free_cells        A list of traversable cells, changing won't do anything
 transitions_table The transistion table for the cells, changing will BREAK the program
 robot_location    The location of the robot, changing will BREAK the program
 ```
