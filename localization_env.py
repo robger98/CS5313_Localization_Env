@@ -119,29 +119,39 @@ class Environment:
                 action_probs = {}
                 
                 # count the number of SE and NW traversable cells. Used later when computing action probabilities
-                se_count = 0
-                nw_count = 0
-                for d in [Directions.S, Directions.E]:
-                    if self.traversable(row, col, d):
-                        se_count += 1
-                for d in [Directions.N, Directions.W]:
-                    if self.traversable(row, col, d):
-                        nw_count += 1
-                total_count = se_count+nw_count
+                # se_count = 0
+                # nw_count = 0
+                # for d in [Directions.S, Directions.E]:
+                #     if self.traversable(row, col, d):
+                #         se_count += 1
+                # for d in [Directions.N, Directions.W]:
+                #     if self.traversable(row, col, d):
+                #         nw_count += 1
+                # total_count = se_count+nw_count
 
-                # Compute Action Probabilities, without noise
+                # Compute Action Probabilities, accounting for walls, without noise
+                # for key in Directions:
+                #     if key in [Directions.S, Directions.E]: # Compute SE action probabilities
+                #         if self.traversable(row, col, key): # if the cell is traversable set the probability otherwise set it to 0
+                #             action_probs[key] = 1/total_count + self.action_bias/se_count
+                #         else:
+                #             action_probs[key] = 0
+                #     elif key == Directions.St: # set stationary probability to 0, Robot can never try to stay still
+                #         action_probs[key] = 0
+                #     elif self.traversable(row,col,key): # Compute NW action probabilities
+                #         action_probs[key] = 1/total_count - self.action_bias/nw_count
+                #     else:
+                #         action_probs[key] = 0
+                
+                # Compute Action Probabilities, without accounting for walls, without noise
                 for key in Directions:
                     if key in [Directions.S, Directions.E]: # Compute SE action probabilities
-                        if self.traversable(row, col, key): # if the cell is traversable set the probability otherwise set it to 0
-                            action_probs[key] = 1/total_count + self.action_bias/se_count
-                        else:
-                            action_probs[key] = 0
+                            action_probs[key] = 0.25 + self.action_bias/2
                     elif key == Directions.St: # set stationary probability to 0, Robot can never try to stay still
                         action_probs[key] = 0
-                    elif self.traversable(row,col,key): # Compute NW action probabilities
-                        action_probs[key] = 1/total_count - self.action_bias/nw_count
-                    else:
-                        action_probs[key] = 0
+                    else: # Compute NW action probabilities
+                        action_probs[key] = 0.25 - self.action_bias/2
+                    
                
                 # normalize action probabilities
                 action_sum = sum([action_probs[x] for x in Directions])
