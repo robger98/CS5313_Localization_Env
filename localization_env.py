@@ -3,7 +3,14 @@
 # Date      : Feb 16, 2020
 
 import random
-from CS5313_Localization_Env import maze
+try:
+    from CS5313_Localization_Env import maze
+except:
+    print('Problem finding CS5313_Localization_Env.maze... Trying to "import maze" only...')
+    try:
+        import maze
+    except:
+        print('Could not import maze')
 from enum import Enum
 
 class Directions(Enum):
