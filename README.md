@@ -4,16 +4,17 @@ Localization environment for the second project of CS5313-SP20 - Advanced Artifi
 
 ## About
 
-This is a testing environment for robot localization. The robots movements are modelled by a DBN, where the hidden
-states are the location of the robot and the heading of the robot. The robot will try to move in the direction of its heading
+This is a testing environment for robot localization. The robot's movements are modelled by a DBN, where the hidden
+states are the location and heading of the robot. The robot will try to move in the direction of its heading
 every step, but may go orthogonally to the intedended direction due to simulated action noise. It will only change heading
-when it runs into a wall, and then it will select from one of the traversable headings, influenced by an action bias. At
-every step the robot will return an observation, which may be faulty due to observation noise, as the evidence variable.
+when it runs into a wall, and then it will select from one of the traversable headings at its current location, 
+influenced by an action bias. At every step the robot will return an observation, which may be faulty due to observation
+noise, as the evidence variable.
 
 ## Requirements
 
-This code requires the `pygame` library for the visualizations, and `numpy`. In the code there is a variable named df,
-which when set to true will also print DataFrames. If this is set to true you will need `pandas` as well.
+This code requires the `pygame` library for the visualizations, and `numpy`. In the code there is a variable named `df`,
+which when set to `True` will also print DataFrames. If this is set to true you will need `pandas` as well.
 
 ## Installation
 
@@ -32,8 +33,8 @@ First you must initialize an environment. This is done with:
 env = le.Environment(action_bias, observation_noise, action_noise, dimensions, seed=seed, window_size=[x,y])
 ```
 
-where you supply the values for the arguments. This will also initialize the display. (Note: window_size and dimensions should
-have the same aspect ratio to avoid stretching of the display)
+where you supply the values for the arguments. This will also initialize the display. (Note: window_size and dimensions
+should have the same aspect ratio to avoid stretching of the display)
 
 Then, in order to move your robot within the environment, it is as simple as:
 
