@@ -13,7 +13,7 @@ noise, as the evidence variable.
 
 ## Requirements
 
-This code requires the `pygame` library for the visualizations, and `numpy`. In the code there is a variable named `df`,
+This code requires the `pygame` library for the visualizations, and `numpy`. In the Environment Args there is a variable named `df`,
 which when set to `True` will also print DataFrames. If this is set to true you will need `pandas` as well.
 
 ## Installation
@@ -30,7 +30,15 @@ from CS5313_Localization_Env import localization_env as le
 First you must initialize an environment. This is done with:
 
 ```python
-env = le.Environment(action_bias, observation_noise, action_noise, dimensions, seed=seed, window_size=[x,y])
+env = le.Environment(
+        action_bias, 
+        observation_noise, 
+        action_noise, 
+        dimensions, 
+        seed=seed, 
+        window_size=[x,y], 
+        printout=True,
+        dataframe_printout=False)
 ```
 
 where you supply the values for the arguments. This will also initialize the display. (Note: window_size and dimensions
@@ -84,6 +92,7 @@ location_transitions    The transition table for the robots location, changing w
 heading_transitions     The transition table for the robot's heading, changing will BREAK the program
 robot_location          The location of the robot, changing will BREAK the program
 robot_heading           The heading of the robot, changing will BREAK the program
+steps                   The number of moves the robot has made, with the first move being step 1
 ```
 
 You shouldn't need to change any variables after initializing the enviroment, and doing so will either do nothing or break the program, so don't.

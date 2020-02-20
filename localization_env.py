@@ -116,6 +116,9 @@ class Environment:
         # the pygame state
         self.running = True
 
+        # Step counter
+        self.steps = 0
+
         # save the bias, noise, and map sizze parameters
         self.action_bias = action_bias
         self.observation_noise = observation_noise
@@ -228,10 +231,12 @@ class Environment:
             self.robot_location[1] + direction.value[1],
         )
         self.map[self.robot_location[0]][self.robot_location[1]] = "x"
-
+        self.steps += 1
         # return the new observation
         if printouts:
             print()
+            print('---------------------------Steps: '+str(self.steps)+' ---------------------------------')
+            print(self.robot_location)
             print(self.robot_heading)
             print(direction)
             if df:
