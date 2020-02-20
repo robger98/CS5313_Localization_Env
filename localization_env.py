@@ -20,9 +20,9 @@ from enum import Enum
 
 
 # Change this to true to print out information on the robot location and heading
-printouts = True
+printouts = False
 # Change this to true inorder to print out the map as a dataframe to console every time move() is called, as well as the Transition Tables to csv files named "heading.csv" and "location.csv". Won't do anything if printouts is false expect import pandas
-df = True
+df = False
 if df:
     from pandas import DataFrame
 
@@ -77,7 +77,7 @@ class Environment:
 
     Important Class Variables\n
     map                     -- The map of the the maze. A 2d list of lists in the form map[row][column] where a value of 1 signifies there is a wall, 0 signifies the cell is traversable, and 'x' denotes the robot location.\n
-    location_transition     -- The table of transition probabilities for each cell. Format is [row][col][heading][direction] which will return the probabilities of moving the direction, given the robot's current row, column, and heading.\n
+    location_transitions     -- The table of transition probabilities for each cell. Format is [row][col][heading][direction] which will return the probabilities of moving the direction, given the robot's current row, column, and heading.\n
     heading_transitions     -- The table of transition probabilities for the headings given each cell. Format is [row][col][heading][heading] which will return the probabilities of each heading for the next time step given the robot's current row, col, and heading.\n
     robot_location          -- The current location of the robot, given as a tuple in the for (row, column).
     robot_heading           -- The current heading of the robot, given as a Headings enum.
