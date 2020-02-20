@@ -30,7 +30,7 @@ except:
     except:
         print("Could not import RobotLocalization")
 from enum import Enum
-import localization_env as Le
+import localization_env as le
 
 
 # Change this to true to print out information on the robot location and heading
@@ -162,11 +162,11 @@ class Environment:
         # gen initial headings probs
         probs = {}
         # prob_sum = 0
-        for h in Le.Headings:
+        for h in le.Headings:
             # num = random.random()
             probs[h] = 1
         #     prob_sum += num
-        # for h in Le.Headings:
+        # for h in le.Headings:
         #     probs[h] /= prob_sum
 
         #init viz
@@ -434,7 +434,7 @@ class Environment:
         sample = np.random.rand(4)
         sample = (sample / np.sum(sample)).tolist()
         i = 0
-        for heading in Le.Headings:
+        for heading in le.Headings:
             hed_probs[heading] = sample[i]
             i += 1
         

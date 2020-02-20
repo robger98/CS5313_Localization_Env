@@ -2,7 +2,7 @@
     Skeleton Code for Visualization by James Hale
 """
 
-import localization_env as Le
+import localization_env as le
 import pygame
 import random
 import numpy as np
@@ -49,10 +49,10 @@ class Game:
                 int(x_dir / 2.5),
             )
         # Draw lines
-        for heading in Le.Headings:
+        for heading in le.Headings:
             color = (255, 255, 255) if heading.name == robot_heading.name else (0, 0, 0)
             width = 3 if heading.name == robot_heading.name else 1
-            if heading == Le.Headings.S:  # DOWN
+            if heading == le.Headings.S:  # DOWN
                 pygame.draw.line(
                     self.screen,
                     color,
@@ -68,7 +68,7 @@ class Game:
                     ),
                     width
                 )
-            elif heading == Le.Headings.N:  # UP
+            elif heading == le.Headings.N:  # UP
                 pygame.draw.line(
                     self.screen,
                     color,
@@ -84,7 +84,7 @@ class Game:
                     ),
                     width
                 )
-            elif heading == Le.Headings.E:  # Right
+            elif heading == le.Headings.E:  # Right
                 pygame.draw.line(
                     self.screen,
                     color,
@@ -146,11 +146,11 @@ class Game:
     def generate_heading_possibilities(self):
         probs = {}
         prob_sum = 0
-        for h in Le.Headings:
+        for h in le.Headings:
             num = random.random()
             probs[h] = num
             prob_sum += num
-        for h in Le.Headings:
+        for h in le.Headings:
             probs[h] /= prob_sum
         return probs
 
@@ -160,7 +160,7 @@ def main():
     speed = 10  # The higher, the lower
     random.seed(seed)
     window_size = [750, 750]
-    env = Le.Environment(0.1, 0.1, 0.1, (10, 10), seed=seed)
+    env = le.Environment(0.1, 0.1, 0.1, (10, 10), seed=seed)
     screen, clock = _init_pygame(window_size)
     done = False
     i = 0
