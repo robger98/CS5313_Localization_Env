@@ -3,7 +3,8 @@
 # Date      : Feb 16, 2020
 
 import random
-
+import time
+import numpy as np
 try:
     from CS5313_Localization_Env import maze
 except:
@@ -29,23 +30,24 @@ except:
     except:
         print("Could not import RobotLocalization")
 from enum import Enum
+import localization_env as Le
 
 
 # Change this to true to print out information on the robot location and heading
 printouts = True
 # Change this to true inorder to print out the map as a dataframe to console every time move() is called, as well as the Transition Tables to csv files named "heading.csv" and "location.csv". Won't do anything if printouts is false expect import pandas
-df = True
+df = False
 if df:
     from pandas import DataFrame
 
 
 class Directions(Enum):
-    """An Enum containing the directions S, E, N, W, and St (stationary) and their respective (row, col) movement tuples. Ex. S = (1,0) meaning down one row, and stationary in the columns."""
+    """An Enum containing the directions S, E, N, W, and St (stationary) and their respective (x, y) movement tuples. Ex. S = (0, 1) meaning down one row, and stationary in the columns."""
 
-    S = (1, 0)
-    E = (0, 1)
-    N = (-1, 0)
-    W = (0, -1)
+    S = (0, 1)
+    E = (1, 0)
+    N = (0, -1)
+    W = (-1, 0)
     St = (0, 0)
 
     def get_ortho(self, value):
@@ -63,12 +65,12 @@ class Directions(Enum):
 
 
 class Headings(Enum):
-    """An enum containing the headings S, E, N, W and their respective (row, col) movement tuples"""
+    """An enum containing the headings S, E, N, W and their respective (x, y) movement tuples"""
 
-    S = (1, 0)
-    E = (0, 1)
-    N = (-1, 0)
-    W = (0, -1)
+    S = (0, 1)
+    E = (1, 0)
+    N = (0, -1)
+    W = (-1, 0)
 
     def get_ortho(self, value):
         """ Return the Headings Enums orthogonal to the given heading
@@ -88,28 +90,31 @@ class Environment:
     """ An environment for testing a randomly moving robot around a maze.
 
     Important Class Variables\n
-    map                     -- The map of the the maze. A 2d list of lists in the form map[row][column] where a value of 1 signifies there is a wall, 0 signifies the cell is traversable, and 'x' denotes the robot location.\n
-    location_transitions     -- The table of transition probabilities for each cell. Format is [row][col][heading][direction] which will return the probabilities of moving the direction, given the robot's current row, column, and heading.\n
-    heading_transitions     -- The table of transition probabilities for the headings given each cell. Format is [row][col][heading][heading] which will return the probabilities of each heading for the next time step given the robot's current row, col, and heading.\n
-    robot_location          -- The current location of the robot, given as a tuple in the for (row, column).
+    map                     -- The map of the the maze. A 2d list of lists in the form list[x][y] where a value of 1 signifies there is a wall, 0 signifies the cell is traversable, and 'x' denotes the robot location.\n
+    location_transitions     -- The table of transition probabilities for each cell. Format is [x][y][heading][direction] which will return the probabilities of moving the direction, given the robot's current x, y, and heading.\n
+    heading_transitions     -- The table of transition probabilities for the headings given each cell. Format is [x][y][heading][heading] which will return the probabilities of each heading for the next time step given the robot's current x, y, and heading.\n
+    robot_location          -- The current location of the robot, given as a tuple in the for (x, y).
     robot_heading           -- The current heading of the robot, given as a Headings enum.
     """
 
     def __init__(
-        self, action_bias, observation_noise, action_noise, dimensions, seed=None
+        self, action_bias, observation_noise, action_noise, dimensions, seed=None, window_size=[750,750]
     ):
         """Initializes the environment. The robot starts in a random traversable cell.
 
         Arguements:\n
-        action_bias         -- Provides a bias for the robots actions. Positive values increase the likelihood of South and East movements, and negative favor North and West. (float in range -1-1)\n
-        observation_noise   -- The probability that any given observation value will flip values erroneously. (float in range 0-1)\n
-        action_noise        -- The probability that an action will move either direction perpendicular to the inteded direction. (float in range 0-1)\n
-        dimensions          -- The dimensions of the map, given in the form (# of rows, # of columns). (tuple in range (1+, 1+))\n
-        seed                -- The random seed value. (int)\n
+        action_bias             -- Provides a bias for the robots actions. Positive values increase the likelihood of South and East movements, and negative favor North and West. (float in range -1-1)\n
+        observation_noise       -- The probability that any given observation value will flip values erroneously. (float in range 0-1)\n
+        action_noise            -- The probability that an action will move either direction perpendicular to the inteded direction. (float in range 0-1)\n
+        dimensions              -- The dimensions of the map, given in the form (x,y). (tuple in range (1+, 1+))\n
+        seed (optional)         -- The random seed value. (int) default=10\n
+        window_size(optional)   -- The [x, y] size of the display. Default is [750, 750]. Should be the same aspect ratio as the maze to avoid strange looking graphics.
 
         Return:\n
         No return
         """
+        # the pygame state
+        self.running = True
 
         # save the bias, noise, and map sizze parameters
         self.action_bias = action_bias
@@ -124,10 +129,10 @@ class Environment:
         # creat the map and list of free cells
         self.map = maze.make_maze(dimensions[0], dimensions[1], seed)
         self.free_cells = [
-            (row, col)
-            for row in range(dimensions[0])
-            for col in range(dimensions[1])
-            if self.map[row][col] == 0
+            (x, y)
+            for x in range(dimensions[0])
+            for y in range(dimensions[1])
+            if self.map[x][y] == 0
         ]
 
         # create the transistion table
@@ -135,8 +140,8 @@ class Environment:
         self.headings_transitions = self.create_headings_table()
 
         if df:
-            DataFrame(self.location_transitions).to_csv("location.csv")
-            DataFrame(self.headings_transitions).to_csv("heading.csv")
+            DataFrame(self.location_transitions).transpose().to_csv("location.csv")
+            DataFrame(self.headings_transitions).transpose().to_csv("heading.csv")
 
         # set the robot location and print
         self.robot_location = self.free_cells[
@@ -154,15 +159,26 @@ class Environment:
             ]
         )
 
+        # gen initial headings probs
+        probs = {}
+        # prob_sum = 0
+        for h in Le.Headings:
+            # num = random.random()
+            probs[h] = 1
+        #     prob_sum += num
+        # for h in Le.Headings:
+        #     probs[h] /= prob_sum
+
         #init viz
+        self.window_size = window_size
         self.game = viz.Game()
-        self.game.init_pygame([750, 750])
+        self.game.init_pygame(self.window_size)
         self.game.update(
             self.map,
             self.robot_location,
             self.robot_heading,
-            self.game.generate_possibilities(self),
-            self.game.generate_heading_possibilities()
+            [[0]*self.dimensions[1]]*self.dimensions[0],
+            probs
         )
         self.game.display()
 
@@ -172,7 +188,7 @@ class Environment:
             print("Robot starting heading:", self.robot_heading)
 
             if df:
-                print(DataFrame(self.map))
+                print(DataFrame(self.map).transpose())
 
     def random_dictionary_sample(self, probs):
         sample = random.random()
@@ -182,8 +198,12 @@ class Environment:
             if prob_sum > sample:
                 return key
 
-    def move(self):
-        """Updates the robots heading and moves the robot to a new position based off of the transistion table and its current location and new heading.
+    def move(self, location_probs, headings_probs):
+        """Updates the robots heading and moves the robot to a new position based off of the transistion table and its current location and new heading. Also redraws the visualization
+
+        Arguments:\n
+        location_probs: The probability of the robot being in any (x, y) cell in the map. Created from your project code. Format list[x][y] = float\n
+        headings_probs: The probability of the robot's current heading being any given heading. Created from your project code. Format dict{<Headings enum> : float, <Headings enum> : float,... }\n
 
         Return:\n
         A list of the observations modified by the observation noise, where 1 signifies a wall and 0 signifies an empty cell. The order of the list is [S, E, N, W]
@@ -215,16 +235,21 @@ class Environment:
             print(self.robot_heading)
             print(direction)
             if df:
-                print(DataFrame(self.map))
+                print(DataFrame(self.map).transpose())
 
-        self.game.update(
-            self.map,
-            self.robot_location,
-            self.robot_heading,
-            self.game.generate_possibilities(self),
-            self.game.generate_heading_possibilities()
-        )
-        self.game.display()
+        if self.running:
+            self.game.update(
+                self.map,
+                self.robot_location,
+                self.robot_heading,
+                location_probs,
+                headings_probs
+            )
+            self.running = self.game.display()
+        else:
+            print("Pygame closed. Quiting...")
+            self.game.quit()
+            exit()
 
         return self.observe()
 
@@ -253,16 +278,16 @@ class Environment:
 
     def create_locations_table(self):
         temp = []
-        # loop through the rows
-        for row in range(self.dimensions[0]):
+        # loop through the x dim
+        for x in range(self.dimensions[0]):
             temp.append([])
-            # loop through the columns
-            for col in range(self.dimensions[1]):
+            # loop through the y dim
+            for y in range(self.dimensions[1]):
                 # If the cell is not traversable than set its value in the transition table to -1
-                if self.map[row][col] == 1:
-                    temp[row].append(-1)
+                if self.map[x][y] == 1:
+                    temp[x].append(-1)
                     continue
-                temp[row].append({})
+                temp[x].append({})
                 for heading in list(Headings):
                     probs = {}
 
@@ -281,37 +306,37 @@ class Environment:
 
                         # account for walls. If there is a wall for one of the transition probabilities add the probability to the stationary probability and set the transisition probability to 0
                     for direction in Directions:
-                        if not self.traversable(row, col, direction):
+                        if not self.traversable(x, y, direction):
                             probs[Directions.St] += probs[direction]
                             probs[direction] = 0
 
                     # add the new transistion probabilities
-                    temp[row][col].update({heading: probs})
+                    temp[x][y].update({heading: probs})
         return temp
 
     def create_headings_table(self):
         temp = []
-        # loop through the rows
-        for row in range(self.dimensions[0]):
+        # loop through the x dim
+        for x in range(self.dimensions[0]):
             temp.append([])
-            # loop through the columns
-            for col in range(self.dimensions[1]):
+            # loop through the y dim
+            for y in range(self.dimensions[1]):
                 # If the cell is not traversable than set its value in the transition table to -1
-                if self.map[row][col] == 1:
-                    temp[row].append(-1)
+                if self.map[x][y] == 1:
+                    temp[x].append(-1)
                     continue
-                temp[row].append({})
+                temp[x].append({})
 
                 for heading in Headings:
                     probs = {}
                     # Handle case when the current heading is traversable
-                    if self.traversable(row, col, heading):
+                    if self.traversable(x, y, heading):
                         for new_heading in Headings:
                             if heading == new_heading:
                                 probs[new_heading] = 1
                             else:
                                 probs[new_heading] = 0
-                        temp[row][col].update({heading: probs})
+                        temp[x][y].update({heading: probs})
                         continue
 
                     # If the current heading is not traversable
@@ -319,7 +344,7 @@ class Environment:
                     # Find which headings are available
                     headings_traversablity = {}
                     for new_heading in Headings:
-                        if self.traversable(row, col, new_heading):
+                        if self.traversable(x, y, new_heading):
                             headings_traversablity[new_heading] = 1
                         else:
                             headings_traversablity[new_heading] = 0
@@ -337,7 +362,7 @@ class Environment:
 
                     # Compute the heading probabilities for traversable headings
                     for new_heading in Headings:
-                        if self.traversable(row, col, new_heading):
+                        if self.traversable(x, y, new_heading):
                             if new_heading in [Headings.S, Headings.E]:
                                 probs[new_heading] = (
                                     1 / total_traversable
@@ -358,16 +383,16 @@ class Environment:
                         probs[h] /= probs_sum
 
                     # add the new transistion probabilities
-                    temp[row][col].update({heading: probs})
+                    temp[x][y].update({heading: probs})
         return temp
 
-    def traversable(self, row, col, direction):
+    def traversable(self, x, y, direction):
         """
-        Returns true if the cell to the given direction of (row,col) is traversable, otherwise returns false.
+        Returns true if the cell to the given direction of (x,y) is traversable, otherwise returns false.
 
         Arguements:\n
-        row         -- the row of the initial cell\n
-        col         -- the column of the initial cell\n
+        row         -- the x coordinate of the initial cell\n
+        col         -- the y coordinate of the initial cell\n
         direction   -- the direction of the cell to check for traversablility. Type: localization_env.Directions enum or localization_env.Headings\n
 
         Return:\n
@@ -375,19 +400,55 @@ class Environment:
         """
         # see if the cell in the direction is traversable. If statement to handle out of bounds errors
         if (
-            row + direction.value[0] >= 0
-            and row + direction.value[0] < self.dimensions[0]
-            and col + direction.value[0] >= 0
-            and col + direction.value[0] < self.dimensions[1]
+            x + direction.value[0] >= 0
+            and x + direction.value[0] < self.dimensions[0]
+            and y + direction.value[0] >= 0
+            and y + direction.value[0] < self.dimensions[1]
         ):
-            if self.map[row + direction.value[0]][col + direction.value[1]] == 0:
+            if self.map[x + direction.value[0]][y + direction.value[1]] == 0:
                 return True
         return False
+    
+    def dummy_location_and_heading_probs(self):
+        """
+        Returns a dummy location probability table and a dummy heading probability dictionary for testing purposes
 
+        Returns:\n
+        location probability table: Format is list[x][y] = float between (0-1)\n
+        Headings probability table: Format is dict{<Heading enum> : float between (0-1)}
+        """
+
+        loc_probs = list()
+        for x in range(self.dimensions[0]):
+            loc_probs.append([])
+            for y in range(self.dimensions[1]):
+                if self.map[x][y] == 1:
+                    loc_probs[x].append(0.0)
+                else:
+                    loc_probs[x].append(random.random())
+        for x in range(self.dimensions[0]):
+            for y in range(self.dimensions[1]):
+                loc_probs[x][y] /= np.sum(np.array(loc_probs))
+
+        hed_probs = {}
+        sample = np.random.rand(4)
+        sample = (sample / np.sum(sample)).tolist()
+        i = 0
+        for heading in Le.Headings:
+            hed_probs[heading] = sample[i]
+            i += 1
+        
+        return loc_probs, hed_probs
 
 if __name__ == "__main__":
-    env = Environment(0.1, 0.1, 0.0, (10, 10), seed=10)
-    print("Starting test. Press <enter> to make move")
-    while True:
-        env.move()
-        input()
+    env = Environment(0.1, 0.1, 0.2, (15, 15), seed=10, window_size=[1000, 1000])
+    # print("Starting test. Press <enter> to make move")
+    
+    
+       
+    done = False
+    while env.running:
+        location, heading = env.dummy_location_and_heading_probs()
+        env.move(location, heading)
+        time.sleep(.25)
+        
