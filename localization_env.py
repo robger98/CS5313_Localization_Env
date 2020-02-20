@@ -16,13 +16,25 @@ except:
         print("Successfully imported maze")
     except:
         print("Could not import maze")
+try:
+    from CS5313_Localization_Env import RobotLocalization as viz
+except:
+    print(
+        'Problem finding CS5313_Localization_Env.RobotLocalization... Trying to "import RobotLocalization" only...'
+    )
+    try:
+        import RobotLocalization as viz
+
+        print("Successfully imported RobotLocalization")
+    except:
+        print("Could not import RobotLocalization")
 from enum import Enum
 
 
 # Change this to true to print out information on the robot location and heading
-printouts = False
+printouts = True
 # Change this to true inorder to print out the map as a dataframe to console every time move() is called, as well as the Transition Tables to csv files named "heading.csv" and "location.csv". Won't do anything if printouts is false expect import pandas
-df = False
+df = True
 if df:
     from pandas import DataFrame
 
@@ -142,6 +154,18 @@ class Environment:
             ]
         )
 
+        #init viz
+        self.game = viz.Game()
+        self.game.init_pygame([750, 750])
+        self.game.update(
+            self.map,
+            self.robot_location,
+            self.robot_heading,
+            self.game.generate_possibilities(self),
+            self.game.generate_heading_possibilities()
+        )
+        self.game.display()
+
         if printouts:
             print("Random seed:", self.seed)
             print("Robot starting location:", self.robot_location)
@@ -192,6 +216,16 @@ class Environment:
             print(direction)
             if df:
                 print(DataFrame(self.map))
+
+        self.game.update(
+            self.map,
+            self.robot_location,
+            self.robot_heading,
+            self.game.generate_possibilities(self),
+            self.game.generate_heading_possibilities()
+        )
+        self.game.display()
+
         return self.observe()
 
     def observe(self):
@@ -352,7 +386,7 @@ class Environment:
 
 
 if __name__ == "__main__":
-    env = Environment(0.1, 0.1, 0.1, (10, 10), seed=10)
+    env = Environment(0.1, 0.1, 0.0, (10, 10), seed=10)
     print("Starting test. Press <enter> to make move")
     while True:
         env.move()
