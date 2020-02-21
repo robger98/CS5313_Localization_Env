@@ -254,7 +254,7 @@ class Environment:
         else:
             print("Pygame closed. Quiting...")
             self.game.quit()
-            exit()
+            
 
         return self.observe()
 
