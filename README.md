@@ -72,6 +72,8 @@ higher probability. The yellow/orange cell represents the highest probability ce
 location and the 4 lines on the robot represent the probabilities you passed for the robot's heading. The bold white line
 is the robot's true heading.
 
+The visualizer can be stopped by closing the window, or programmatically by setting `self.running` to false.
+
 ## Directions and Headings Enums
 
 Directions and Headings enums are both used to represent direction. The location transition table uses Directions to represent movements in each of the cardinal directions as well as a stationary move, which happens when action noise causes the robot to run into a wall. This class can be accessed with `le.Directions` for interpreting the location transition table.
@@ -98,6 +100,7 @@ heading_transitions     The transition table for the robot's heading, changing w
 robot_location          The location of the robot, changing will BREAK the program
 robot_heading           The heading of the robot, changing will BREAK the program
 steps                   The number of moves the robot has made, with the first move being step 1
+running                 True if the visualizer is running, false otherwise. You can set to false to stop the visualizer.
 ```
 
 You shouldn't need to change any variables after initializing the enviroment, and doing so will either do nothing or break the program, so don't.
