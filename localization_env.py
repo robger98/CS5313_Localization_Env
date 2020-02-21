@@ -449,7 +449,7 @@ class Environment:
         return loc_probs, hed_probs
 
 if __name__ == "__main__":
-    env = Environment(0.1, 0.1, 0.2, (15, 15), seed=10, window_size=[1000, 1000])
+    env = Environment(0.1, 0.1, 0.2, (10, 10), seed=10, window_size=[1000, 1000])
     # print("Starting test. Press <enter> to make move")
     
     

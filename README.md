@@ -67,6 +67,13 @@ You can access every variable within the environment with the form:
 env.<variable_name>
 ```
 
+## Visualizer
+
+In the visualizer the color of the cells represent the probability you passed to `env.move()` for each cell, where darker
+higher probability. The yellow/orange cell represents the highest probability cell. The circle represents the robot's true
+location and the 4 lines on the robot represent the probabilities you passed for the robot's heading. The bold white line
+is the robot's true heading.
+
 ## Directions and Headings Enums
 
 Directions and Headings enums are both used to represent direction. The location transition table uses Directions to represent movements in each of the cardinal directions as well as a stationary move, which happens when action noise causes the robot to run into a wall. This class can be accessed with `le.Directions` for interpreting the location transition table.
