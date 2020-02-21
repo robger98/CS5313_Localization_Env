@@ -36,9 +36,7 @@ env = le.Environment(
         action_noise, 
         dimensions, 
         seed=seed, 
-        window_size=[x,y], 
-        printout=True,
-        dataframe_printout=False)
+        window_size=[x,y])
 ```
 
 where you supply the values for the arguments. This will also initialize the display. (Note: window_size and dimensions
