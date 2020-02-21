@@ -424,16 +424,19 @@ class Environment:
         """
 
         loc_probs = list()
+        sum_probs = 0
         for x in range(self.dimensions[0]):
             loc_probs.append([])
             for y in range(self.dimensions[1]):
                 if self.map[x][y] == 1:
                     loc_probs[x].append(0.0)
                 else:
-                    loc_probs[x].append(random.random())
+                    num = random.random()
+                    loc_probs[x].append(num)
+                    sum_probs += num
         for x in range(self.dimensions[0]):
             for y in range(self.dimensions[1]):
-                loc_probs[x][y] /= np.sum(np.array(loc_probs))
+                loc_probs[x][y] /= sum_probs
 
         hed_probs = {}
         sample = np.random.rand(4)
@@ -454,6 +457,8 @@ if __name__ == "__main__":
     done = False
     while env.running:
         location, heading = env.dummy_location_and_heading_probs()
-        env.move(location, heading)
+        observation = env.move(location, heading)
+        if printouts:
+            print(observation)
         time.sleep(.25)
         

@@ -1,5 +1,6 @@
 """
     Skeleton Code for Visualization by James Hale
+    Edits by Robert Geraghty
 """
 
 import localization_env as le
@@ -33,8 +34,8 @@ class Game:
                 else:
                     color = (
                         (1 - prob_map[i][j]) * 255,
-                        (1 - prob_map[i][j]*0.2) * 255,
-                        (1 - prob_map[i][j]*0.2) * 255,
+                        (1 - prob_map[i][j]*.2) * 255,
+                        (1 - prob_map[i][j]*.2) * 255,
                     )
                 pygame.draw.rect(
                     self.screen, color, [i * x_dir, j * y_dir, x_dir, y_dir]

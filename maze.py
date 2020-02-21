@@ -1,9 +1,10 @@
-# Random Maze Generator using Depth-first Search
-# http://en.wikipedia.org/wiki/Maze_generation_algorithm
-# FB - 2012-12-14
+"""Random Maze Generator using Depth-first Search\n
+http://en.wikipedia.org/wiki/Maze_generation_algorithm\n
+FB - 2012-12-14\n
 
-# Code taken from http://code.activestate.com/recipes/578356-random-maze-generator/ used and modified under MIT license
-
+Code taken from http://code.activestate.com/recipes/578356-random-maze-generator/ used and modified under MIT license\n
+Edits by Robert Geraghty\n
+"""
 import random
 
 
