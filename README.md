@@ -13,7 +13,7 @@ noise, as the evidence variable.
 
 ## Requirements
 
-This code requires the `pygame` library for the visualizations, and `numpy`. In the Environment Args there is a variable named `df`,
+This code requires the `pygame` library for the visualizations, and `numpy`. In the code there is a variable named `df`,
 which when set to `True` will also print DataFrames. If this is set to true you will need `pandas` as well.
 
 ## Installation
@@ -36,9 +36,7 @@ env = le.Environment(
         action_noise, 
         dimensions, 
         seed=seed, 
-        window_size=[x,y], 
-        printout=True,
-        dataframe_printout=False)
+        window_size=[x,y])
 ```
 
 where you supply the values for the arguments. This will also initialize the display. (Note: window_size and dimensions
