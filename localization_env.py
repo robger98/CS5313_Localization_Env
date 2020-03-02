@@ -18,8 +18,11 @@ except:
         import maze
 
         print("Successfully imported maze")
-    except:
+    except Exception as ex:
         print("Could not import maze")
+        print("----->LOOK HERE FOR EXCEPTION MESSAGE<-----")
+        print(ex)
+        print("----->LOOK HERE FOR EXCEPTION MESSAGE<-----")
 try:
     from CS5313_Localization_Env import RobotLocalization as viz
 except:
@@ -30,8 +33,11 @@ except:
         import RobotLocalization as viz
 
         print("Successfully imported RobotLocalization")
-    except:
+    except Exception as ex:
         print("Could not import RobotLocalization")
+        print("----->LOOK HERE FOR EXCEPTION MESSAGE<-----")
+        print(ex)
+        print("----->LOOK HERE FOR EXCEPTION MESSAGE<-----")
 try:
     from CS5313_Localization_Env import localization_env as le
 except:
@@ -42,8 +48,11 @@ except:
         import localization_env as le
 
         print("Successfully imported localization_env")
-    except:
+    except Exception as ex:
         print("Could not import localization_env")
+        print("----->LOOK HERE FOR EXCEPTION MESSAGE<-----")
+        print(ex)
+        print("----->LOOK HERE FOR EXCEPTION MESSAGE<-----")
 from enum import Enum
 
 

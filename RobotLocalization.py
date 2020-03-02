@@ -13,8 +13,11 @@ except:
         import localization_env as le
 
         print("Successfully imported localization_env")
-    except:
+    except Exception as ex:
         print("Could not import localization_env")
+        print("----->LOOK HERE FOR EXCEPTION MESSAGE<-----")
+        print(ex)
+        print("----->LOOK HERE FOR EXCEPTION MESSAGE<-----")
 import pygame
 import random
 import numpy as np
