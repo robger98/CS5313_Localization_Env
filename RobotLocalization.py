@@ -3,11 +3,21 @@
     Edits by Robert Geraghty
 """
 
-import localization_env as le
+try:
+    from CS5313_Localization_Env import localization_env as le
+except:
+    print(
+        'Problem finding CS5313_Localization_Env.localization_env... Trying to "import localization_env" only...'
+    )
+    try:
+        import localization_env as le
+
+        print("Successfully imported localization_env")
+    except:
+        print("Could not import localization_env")
 import pygame
 import random
 import numpy as np
-
 
 class Game:
     def init_pygame(self, window_size):

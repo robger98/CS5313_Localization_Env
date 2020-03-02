@@ -5,6 +5,9 @@
 import random
 import time
 import numpy as np
+import random
+import time
+import numpy as np
 try:
     from CS5313_Localization_Env import maze
 except:
@@ -29,8 +32,19 @@ except:
         print("Successfully imported RobotLocalization")
     except:
         print("Could not import RobotLocalization")
+try:
+    from CS5313_Localization_Env import localization_env as le
+except:
+    print(
+        'Problem finding CS5313_Localization_Env.localization_env... Trying to "import localization_env" only...'
+    )
+    try:
+        import localization_env as le
+
+        print("Successfully imported localization_env")
+    except:
+        print("Could not import localization_env")
 from enum import Enum
-import localization_env as le
 
 
 # Change this to true to print out information on the robot location and heading
