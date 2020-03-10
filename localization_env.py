@@ -8,6 +8,7 @@ import numpy as np
 import random
 import time
 import numpy as np
+
 try:
     from CS5313_Localization_Env import maze
 except:
@@ -121,7 +122,13 @@ class Environment:
     """
 
     def __init__(
-        self, action_bias, observation_noise, action_noise, dimensions, seed=None, window_size=[750,750]
+        self,
+        action_bias,
+        observation_noise,
+        action_noise,
+        dimensions,
+        seed=None,
+        window_size=[750, 750],
     ):
         """Initializes the environment. The robot starts in a random traversable cell.
 
@@ -174,6 +181,8 @@ class Environment:
             random.randint(0, len(self.free_cells) - 1)
         ]
 
+        self.location_priors, self.heading_priors = self.compute_prior_probabilities()
+
         self.map[self.robot_location[0]][self.robot_location[1]] = "x"
 
         # Set the robot heading
@@ -195,7 +204,7 @@ class Environment:
         # for h in le.Headings:
         #     probs[h] /= prob_sum
 
-        #init viz
+        # init viz
         self.window_size = window_size
         self.game = viz.Game()
         self.game.init_pygame(self.window_size)
@@ -203,8 +212,8 @@ class Environment:
             self.map,
             self.robot_location,
             self.robot_heading,
-            [[0]*self.dimensions[1]]*self.dimensions[0],
-            probs
+            [[0] * self.dimensions[1]] * self.dimensions[0],
+            probs,
         )
         self.game.display()
 
@@ -215,6 +224,24 @@ class Environment:
 
             if df:
                 print(DataFrame(self.map).transpose())
+
+    def compute_prior_probabilities(self):
+        location_priors = {}
+        for cell in self.free_cells:
+            location_priors[cell] = 1 / len(self.free_cells)
+
+        heading_priors = {}
+        for heading in Headings:
+            heading_priors[heading] = 0
+            for cell in self.free_cells:
+                for heading2 in Headings:
+                    print(self.headings_transitions[cell[0]][cell[1]][heading2])
+                    heading_priors[heading] += self.headings_transitions[cell[0]][
+                        cell[1]
+                    ][heading2][heading]
+            heading_priors[heading] /= (len(self.free_cells)*4)
+
+        return location_priors, heading_priors
 
     def random_dictionary_sample(self, probs):
         sample = random.random()
@@ -249,7 +276,7 @@ class Environment:
         )
 
         self.map[self.robot_location[0]][self.robot_location[1]] = "x"
-        
+
         # Get the new heading
         h_probs = self.headings_transitions[self.robot_location[0]][
             self.robot_location[1]
@@ -262,13 +289,15 @@ class Environment:
         #     self.robot_location[1]
         # ][self.robot_heading]
 
-        
-        
         self.steps += 1
         # return the new observation
         if printouts:
             print()
-            print('---------------------------Steps: '+str(self.steps)+' ---------------------------------')
+            print(
+                "---------------------------Steps: "
+                + str(self.steps)
+                + " ---------------------------------"
+            )
             print(self.robot_location)
             print(self.robot_heading)
             print(direction)
@@ -281,13 +310,12 @@ class Environment:
                 self.robot_location,
                 self.robot_heading,
                 location_probs,
-                headings_probs
+                headings_probs,
             )
             self.running = self.game.display()
         else:
             print("Pygame closed. Quiting...")
             self.game.quit()
-            
 
         return self.observe()
 
@@ -446,7 +474,7 @@ class Environment:
             if self.map[x + direction.value[0]][y + direction.value[1]] == 0:
                 return True
         return False
-    
+
     def dummy_location_and_heading_probs(self):
         """
         Returns a dummy location probability table and a dummy heading probability dictionary for testing purposes
@@ -478,20 +506,24 @@ class Environment:
         for heading in le.Headings:
             hed_probs[heading] = sample[i]
             i += 1
-        
+
         return loc_probs, hed_probs
+
 
 if __name__ == "__main__":
     env = Environment(0.1, 0.1, 0.2, (10, 10), seed=10, window_size=[1000, 1000])
     # print("Starting test. Press <enter> to make move")
-    
-    
-       
+    location, heading = env.dummy_location_and_heading_probs()
+    print(env.location_priors)
+    print()
+    print(env.heading_priors)
+    input()
     done = False
     while env.running:
-        location, heading = env.dummy_location_and_heading_probs()
+        
         observation = env.move(location, heading)
+        
         if printouts:
             print(observation)
-        time.sleep(.25)
-        
+        time.sleep(0.25)
+
