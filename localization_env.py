@@ -235,12 +235,6 @@ class Environment:
         A list of the observations modified by the observation noise, where 1 signifies a wall and 0 signifies an empty cell. The order of the list is [S, E, N, W]
         """
 
-        # Get the new heading
-        h_probs = self.headings_transitions[self.robot_location[0]][
-            self.robot_location[1]
-        ][self.robot_heading]
-        self.robot_heading = self.random_dictionary_sample(h_probs)
-
         # get the new location
         self.map[self.robot_location[0]][self.robot_location[1]] = 0
         probs = self.location_transitions[self.robot_location[0]][
@@ -253,7 +247,23 @@ class Environment:
             self.robot_location[0] + direction.value[0],
             self.robot_location[1] + direction.value[1],
         )
+
         self.map[self.robot_location[0]][self.robot_location[1]] = "x"
+        
+        # Get the new heading
+        h_probs = self.headings_transitions[self.robot_location[0]][
+            self.robot_location[1]
+        ][self.robot_heading]
+        self.robot_heading = self.random_dictionary_sample(h_probs)
+
+        # # get the new location
+        # self.map[self.robot_location[0]][self.robot_location[1]] = 0
+        # probs = self.location_transitions[self.robot_location[0]][
+        #     self.robot_location[1]
+        # ][self.robot_heading]
+
+        
+        
         self.steps += 1
         # return the new observation
         if printouts:
