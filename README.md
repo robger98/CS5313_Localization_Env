@@ -97,6 +97,9 @@ map                     The map, changing will BREAK the program
 free_cells              A list of traversable cells, changing won't do anything
 location_transitions    The transition table for the robots location, changing will BREAK the program
 heading_transitions     The transition table for the robot's heading, changing will BREAK the program
+location_priors         The prior probabilities for each free cell, given as a dictionary of {(x1, y1) : prob, ..., (xn, yn) : prob}
+                        where each (xi, yi) is a free cell. Does not provide probabilities for non-traversable cells.
+heading_priors          The prior probabilities for each heading, given as a diction of {Heading.S : prob, ..., Heading.W : prob}
 robot_location          The location of the robot, changing will BREAK the program
 robot_heading           The heading of the robot, changing will BREAK the program
 steps                   The number of moves the robot has made, with the first move being step 1
