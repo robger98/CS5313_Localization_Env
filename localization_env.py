@@ -339,7 +339,7 @@ class Environment:
             1 - x if random.random() < self.observation_noise else x
             for x in observations
         ]
-        return observations
+        return tuple(observations)
 
     def create_observation_tables(self):
         observation_table = []
@@ -352,7 +352,7 @@ class Environment:
 
                 observation_table[x][y] = {}
 
-                observations = [
+                observations = tuple([
                     0
                     if self.traversable(
                         self.robot_location[0], self.robot_location[1], direction
@@ -360,7 +360,7 @@ class Environment:
                     else 1
                     for direction in Directions
                     if direction != Directions.St
-                ]
+                ])
 
                 for a in [0, 1]:
                     for b in [0, 1]:
@@ -551,7 +551,6 @@ if __name__ == "__main__":
     env = Environment(0.1, 0.1, 0.2, (10, 10), window_size=[1000, 1000])
     # print("Starting test. Press <enter> to make move")
     location, heading = env.dummy_location_and_heading_probs()
-
     done = False
     while env.running:
 

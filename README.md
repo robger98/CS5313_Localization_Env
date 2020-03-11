@@ -48,7 +48,7 @@ Then, in order to move your robot within the environment, it is as simple as:
 observation = env.move(location_probabilities, heading_probabilities)
 ```
 
-where `move()` returns the next observation and updates the display. The arguements are your program's estimation of where
+where `move()` returns the next observation as a tuple and updates the display. The arguements are your program's estimation of where
 the robot is and where it is going. More can be seen on these arguements in the code comments.
 
 Observations can also be retrieved with:
