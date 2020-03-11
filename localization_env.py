@@ -235,7 +235,6 @@ class Environment:
             heading_priors[heading] = 0
             for cell in self.free_cells:
                 for heading2 in Headings:
-                    print(self.headings_transitions[cell[0]][cell[1]][heading2])
                     heading_priors[heading] += self.headings_transitions[cell[0]][
                         cell[1]
                     ][heading2][heading]
@@ -514,10 +513,6 @@ if __name__ == "__main__":
     env = Environment(0.1, 0.1, 0.2, (10, 10), window_size=[1000, 1000])
     # print("Starting test. Press <enter> to make move")
     location, heading = env.dummy_location_and_heading_probs()
-    print(env.location_priors)
-    print()
-    print(env.heading_priors)
-    input()
     done = False
     while env.running:
         
