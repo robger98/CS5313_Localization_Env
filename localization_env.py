@@ -182,7 +182,7 @@ class Environment:
         ]
 
         self.location_priors, self.heading_priors = self.compute_prior_probabilities()
-
+        self.observation_tables = self.create_observation_tables()
         self.map[self.robot_location[0]][self.robot_location[1]] = "x"
 
         # Set the robot heading
@@ -238,7 +238,7 @@ class Environment:
                     heading_priors[heading] += self.headings_transitions[cell[0]][
                         cell[1]
                     ][heading2][heading]
-            heading_priors[heading] /= (len(self.free_cells)*4)
+            heading_priors[heading] /= len(self.free_cells) * 4
 
         return location_priors, heading_priors
 
@@ -340,6 +340,44 @@ class Environment:
             for x in observations
         ]
         return observations
+
+    def create_observation_tables(self):
+        observation_table = []
+        for x in range(self.dimensions[0]):
+            observation_table.append({})
+            for y in range(self.dimensions[1]):
+                if self.map[x][y] == 1:
+                    observation_table[x][y] = -1
+                    continue
+
+                observation_table[x][y] = {}
+
+                observations = [
+                    0
+                    if self.traversable(
+                        self.robot_location[0], self.robot_location[1], direction
+                    )
+                    else 1
+                    for direction in Directions
+                    if direction != Directions.St
+                ]
+
+                for a in [0, 1]:
+                    for b in [0, 1]:
+                        for c in [0, 1]:
+                            for d in [0, 1]:
+                                potential_obs = (a, b, c, d)
+                                num_wrong = 0
+                                for i in range(len(observations)):
+                                    if observations[i] != potential_obs[i]:
+                                        num_wrong += 1
+                                prob = (1 - self.observation_noise) ** (len(
+                                    observations
+                                )-num_wrong) * self.observation_noise ** num_wrong
+                                
+                                observation_table[x][y][potential_obs] = prob
+                
+        return observation_table
 
     def create_locations_table(self):
         temp = []
@@ -513,11 +551,12 @@ if __name__ == "__main__":
     env = Environment(0.1, 0.1, 0.2, (10, 10), window_size=[1000, 1000])
     # print("Starting test. Press <enter> to make move")
     location, heading = env.dummy_location_and_heading_probs()
+
     done = False
     while env.running:
-        
+
         observation = env.move(location, heading)
-        
+
         if printouts:
             print(observation)
         time.sleep(0.25)
