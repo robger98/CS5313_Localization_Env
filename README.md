@@ -97,13 +97,16 @@ map                     The map, changing will BREAK the program
 free_cells              A list of traversable cells, changing won't do anything
 location_transitions    The transition table for the robots location, changing will BREAK the program
 heading_transitions     The transition table for the robot's heading, changing will BREAK the program
-location_priors         The prior probabilities for each free cell, given as a dictionary of {(x1, y1) : prob, ..., (xn, yn) : prob}
-                        where each (xi, yi) is a free cell. Does not provide probabilities for non-traversable cells.
-heading_priors          The prior probabilities for each heading, given as a diction of {Heading.S : prob, ..., Heading.W : prob}
+location_priors         The prior probabilities for each free cell, given as a dictionary of 
+                        {(x1, y1) : prob, ..., (xn, yn) : prob} where each (xi, yi) is a free cell.
+                        Does not provide probabilities for non-traversable cells.
+heading_priors          The prior probabilities for each heading, given as a diction of 
+                        {Heading.S : prob, ..., Heading.W : prob}
 robot_location          The location of the robot, changing will BREAK the program
 robot_heading           The heading of the robot, changing will BREAK the program
 steps                   The number of moves the robot has made, with the first move being step 1
-running                 True if the visualizer is running, false otherwise. You can set to false to stop the visualizer.
+running                 True if the visualizer is running, false otherwise. You can set to false to 
+                        stop the visualizer.
 ```
 
 You shouldn't need to change any variables after initializing the enviroment, and doing so will either do nothing or break the program, so don't.
