@@ -102,6 +102,8 @@ location_priors         The prior probabilities for each free cell, given as a d
                         Does not provide probabilities for non-traversable cells.
 heading_priors          The prior probabilities for each heading, given as a diction of 
                         {Heading.S : prob, ..., Heading.W : prob}
+observation_tables      The observation probabilities at any given location. Format of 
+                        observation_tables[x][y][observation_tuple] = probability of that observation
 robot_location          The location of the robot, changing will BREAK the program
 robot_heading           The heading of the robot, changing will BREAK the program
 steps                   The number of moves the robot has made, with the first move being step 1
