@@ -511,7 +511,7 @@ class Environment:
 
 
 if __name__ == "__main__":
-    env = Environment(0.1, 0.1, 0.2, (10, 10), seed=10, window_size=[1000, 1000])
+    env = Environment(0.1, 0.1, 0.2, (10, 10), window_size=[1000, 1000])
     # print("Starting test. Press <enter> to make move")
     location, heading = env.dummy_location_and_heading_probs()
     print(env.location_priors)
