@@ -250,7 +250,7 @@ class Environment:
             if prob_sum > sample:
                 return key
 
-    def move(self, location_probs, headings_probs):
+    def move(self):
         """Updates the robots heading and moves the robot to a new position based off of the transistion table and its current location and new heading. Also redraws the visualization
 
         Arguments:\n
@@ -303,6 +303,22 @@ class Environment:
             if df:
                 print(DataFrame(self.map).transpose())
 
+        # if self.running:
+        #     self.game.update(
+        #         self.map,
+        #         self.robot_location,
+        #         self.robot_heading,
+        #         location_probs,
+        #         headings_probs,
+        #     )
+        #     self.running = self.game.display()
+        # else:
+        #     print("Pygame closed. Quiting...")
+        #     self.game.quit()
+
+        return self.observe()
+
+    def update(self, location_probs, headings_probs):
         if self.running:
             self.game.update(
                 self.map,
@@ -315,8 +331,6 @@ class Environment:
         else:
             print("Pygame closed. Quiting...")
             self.game.quit()
-
-        return self.observe()
 
     def observe(self):
         """Observes the walls at the current robot location
@@ -339,7 +353,7 @@ class Environment:
             1 - x if random.random() < self.observation_noise else x
             for x in observations
         ]
-        return tuple(observations)
+        return observations
 
     def create_observation_tables(self):
         observation_table = []
@@ -352,15 +366,15 @@ class Environment:
 
                 observation_table[x][y] = {}
 
-                observations = tuple([
+                observations = [
                     0
                     if self.traversable(
-                        self.robot_location[0], self.robot_location[1], direction
+                        x, y, direction
                     )
                     else 1
                     for direction in Directions
                     if direction != Directions.St
-                ])
+                ]
 
                 for a in [0, 1]:
                     for b in [0, 1]:
@@ -374,9 +388,7 @@ class Environment:
                                 prob = (1 - self.observation_noise) ** (len(
                                     observations
                                 )-num_wrong) * self.observation_noise ** num_wrong
-                                
                                 observation_table[x][y][potential_obs] = prob
-                
         return observation_table
 
     def create_locations_table(self):
@@ -551,6 +563,7 @@ if __name__ == "__main__":
     env = Environment(0.1, 0.1, 0.2, (10, 10), window_size=[1000, 1000])
     # print("Starting test. Press <enter> to make move")
     location, heading = env.dummy_location_and_heading_probs()
+
     done = False
     while env.running:
 
