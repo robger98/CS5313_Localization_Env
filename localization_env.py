@@ -251,11 +251,7 @@ class Environment:
                 return key
 
     def move(self):
-        """Updates the robots heading and moves the robot to a new position based off of the transistion table and its current location and new heading. Also redraws the visualization
-
-        Arguments:\n
-        location_probs: The probability of the robot being in any (x, y) cell in the map. Created from your project code. Format list[x][y] = float\n
-        headings_probs: The probability of the robot's current heading being any given heading. Created from your project code. Format dict{<Headings enum> : float, <Headings enum> : float,... }\n
+        """Updates the robots heading and moves the robot to a new position based off of the transistion table and its current location and new heading.
 
         Return:\n
         A list of the observations modified by the observation noise, where 1 signifies a wall and 0 signifies an empty cell. The order of the list is [S, E, N, W]
@@ -319,6 +315,12 @@ class Environment:
         return self.observe()
 
     def update(self, location_probs, headings_probs):
+        """Updates the visualizer to represent where your filtering method estimates the robot to be, and where it estimates the robot is heading.
+
+        Arguments:\n
+        location_probs: The probability of the robot being in any (x, y) cell in the map. Created from your project code. Format list[x][y] = float\n
+        headings_probs: The probability of the robot's current heading being any given heading. Created from your project code. Format dict{<Headings enum> : float, <Headings enum> : float,... }\n
+        """
         if self.running:
             self.game.update(
                 self.map,
