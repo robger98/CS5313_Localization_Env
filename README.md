@@ -50,7 +50,9 @@ observation = env.move()
 ```
 
 where `update` updates the visualizer, with the arguments as your program's estimation of where
-the robot is (location) and where it is going (heading). More can be seen on these arguements in the code comments. `move()` returns the next observation as a tuple and updates the display.
+the robot is (location) and where it is going (heading). More can be seen on these arguements in the code comments. 
+
+`move()` moves the robot in the environment and returns the next observation as a tuple. We update before we move, otherwise the robot's location in the visualizer would be one time step ahead of where your program is guessing it is.
 
 Observations can also be retrieved with:
 
