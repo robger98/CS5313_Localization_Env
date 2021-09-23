@@ -1,6 +1,6 @@
 # CS5313/7313_Localization_Env
 
-Localization environment for the second project of CS5313 - Advanced Artificial Intelligence
+Localization environment for the second project of CS5313/7313 - Advanced Artificial Intelligence
 
 ## About
 
