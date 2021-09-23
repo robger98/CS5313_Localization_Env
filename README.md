@@ -125,7 +125,7 @@ Headings and Directions are interchangable in some places in the code. The main 
 
 ## Support
 
-If you find a bug please email me at rrg053@utulsa.edu or robertrgeraghty@gmail.com, as I don't generally check the class discussion board on harvey.
+If you find a bug please email me at rrg053@utulsa.edu, as I don't generally check the class discussion board on harvey.
 
 ## Authors
 James Hale & Robert Geraghty
