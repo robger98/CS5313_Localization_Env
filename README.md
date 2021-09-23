@@ -45,11 +45,12 @@ should have the same aspect ratio to avoid stretching of the display)
 Then, in order to move your robot within the environment, it is as simple as:
 
 ```python
-observation = env.move(location_probabilities, heading_probabilities)
+env.update(location_probabilities, heading_probabilities)
+observation = env.move()
 ```
 
-where `move()` returns the next observation as a tuple and updates the display. The arguements are your program's estimation of where
-the robot is and where it is going. More can be seen on these arguements in the code comments.
+where `update` updates the visualizer, with the arguments as your program's estimation of where
+the robot is (location) and where it is going (heading). More can be seen on these arguements in the code comments. `move()` returns the next observation as a tuple and updates the display.
 
 Observations can also be retrieved with:
 
