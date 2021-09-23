@@ -70,7 +70,7 @@ env.<variable_name>
 
 ## Visualizer
 
-In the visualizer the color of the cells represent the probability you passed to `env.move()` for each cell, where darker
+In the visualizer the color of the cells represent the probability you passed to `env.update()` for each cell, where darker
 higher probability. The yellow/orange cell represents the highest probability cell. The circle represents the robot's true
 location and the 4 lines on the robot represent the probabilities you passed for the robot's heading. The bold white line
 is the robot's true heading.
